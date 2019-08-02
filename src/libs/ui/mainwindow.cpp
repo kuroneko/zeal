@@ -75,6 +75,10 @@ MainWindow::MainWindow(Core::Application *app, QWidget *parent) :
     // initialise key grabber
     connect(m_globalShortcut, &QxtGlobalShortcut::activated, this, &MainWindow::toggleWindow);
 
+    // set up the browser profile
+    m_webProfile = Browser::WebControl::makeDefaultProfile(this);
+    m_webProfile->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, false);
+
     setupTabBar();
 
     // Setup application wide shortcuts.
@@ -286,7 +290,7 @@ void MainWindow::moveTab(int from, int to) {
 
 BrowserTab *MainWindow::createTab()
 {
-    auto tab = new BrowserTab();
+    auto tab = new BrowserTab(nullptr, m_webProfile);
     tab->navigateToStartPage();
     addTab(tab);
     return tab;

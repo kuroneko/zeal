@@ -27,6 +27,7 @@
 
 #include <QModelIndexList>
 #include <QWidget>
+#include <QtWebEngineWidgets/QWebEngineProfile>
 
 class QToolButton;
 
@@ -48,7 +49,7 @@ class BrowserTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BrowserTab(QWidget *parent = nullptr);
+    explicit BrowserTab(QWidget *parent = nullptr, QWebEngineProfile *webProfile = nullptr);
     BrowserTab *clone(QWidget *parent = nullptr) const;
     ~BrowserTab() override;
 

@@ -28,6 +28,7 @@
 
 class QWebEngineHistory;
 class QWebChannel;
+class QWebEngineProfile;
 
 namespace Zeal {
 namespace Browser {
@@ -40,7 +41,7 @@ class WebControl final : public QWidget
     Q_OBJECT
     Q_DISABLE_COPY(WebControl)
 public:
-    explicit WebControl(QWidget *parent = nullptr);
+    explicit WebControl(QWidget *parent = nullptr, QWebEngineProfile *webProfile = nullptr);
 
     void load(const QUrl &url);
     bool canGoBack() const;
@@ -58,6 +59,8 @@ public:
     void setJavaScriptEnabled(bool enabled);
 
     void setWebBridgeObject(const QString &name, QObject *object);
+
+    static QWebEngineProfile *makeDefaultProfile(QObject *parent = nullptr);
 
 signals:
     void titleChanged(const QString &title);
@@ -81,6 +84,7 @@ private:
     WebView *m_webView = nullptr;
     SearchToolBar *m_searchToolBar = nullptr;
     QWebChannel *m_channel = nullptr;
+    QWebEngineProfile *m_profile = nullptr;
 };
 
 } // namespace Browser

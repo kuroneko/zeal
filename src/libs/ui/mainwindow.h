@@ -30,6 +30,7 @@ class QxtGlobalShortcut;
 
 class QSystemTrayIcon;
 class QTabBar;
+class QWebEngineProfile;
 
 namespace Zeal {
 
@@ -114,6 +115,7 @@ private:
     SidebarViewProvider *m_sbViewProvider = nullptr;
 
     QSystemTrayIcon *m_trayIcon = nullptr;
+    QWebEngineProfile *m_webProfile = nullptr;
 };
 
 } // namespace WidgetUi

@@ -49,11 +49,11 @@ namespace {
 const char WelcomePageUrl[] = "qrc:///browser/welcome.html";
 } // namespace
 
-BrowserTab::BrowserTab(QWidget *parent)
+BrowserTab::BrowserTab(QWidget *parent, QWebEngineProfile *webProfile)
     : QWidget(parent)
 {
     // Setup WebControl.
-    m_webControl = new Browser::WebControl(this);
+    m_webControl = new Browser::WebControl(this, webProfile);
     connect(m_webControl, &Browser::WebControl::titleChanged, this, &BrowserTab::titleChanged);
     connect(m_webControl, &Browser::WebControl::urlChanged, this, [this](const QUrl &url) {
         const QString name = docsetName(url);
@@ -158,7 +158,7 @@ BrowserTab::BrowserTab(QWidget *parent)
 
 BrowserTab *BrowserTab::clone(QWidget *parent) const
 {
-    auto tab = new BrowserTab(parent);
+    auto tab = new BrowserTab(parent, nullptr);
 
     if (m_searchSidebar) {
         tab->m_searchSidebar = m_searchSidebar->clone();

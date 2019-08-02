@@ -39,12 +39,15 @@
 #include <QWebEngineSettings>
 #include <QWebEngineContextMenuData>
 #include <QWebChannel>
+#include <QWebEnginePage>
 
 using namespace Zeal::Browser;
 
-WebView::WebView(QWidget *parent)
+WebView::WebView(QWidget *parent, QWebEngineProfile *webProfile)
     : QWebEngineView(parent)
 {
+    auto ourPage = new QWebEnginePage(webProfile, this);
+    setPage(ourPage);
     //FIXME: no NAM for WebEngine - need to use a access/gating override in the page object instead!
     //page()->setNetworkAccessManager(Core::Application::instance()->networkManager());
     setZoomLevel(defaultZoomLevel());

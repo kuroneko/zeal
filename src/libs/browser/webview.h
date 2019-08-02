@@ -36,7 +36,7 @@ class WebView final : public QWebEngineView
     Q_OBJECT
     Q_DISABLE_COPY(WebView)
 public:
-    explicit WebView(QWidget *parent = nullptr);
+    explicit WebView(QWidget *parent = nullptr, QWebEngineProfile *webProfile = nullptr);
 
     int zoomLevel() const;
     void setZoomLevel(int level);

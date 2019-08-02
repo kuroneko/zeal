@@ -34,10 +34,12 @@
 #include <QWebEngineSettings>
 #include <QVBoxLayout>
 #include <QWebChannel>
+#include <QWebEngineProfile>
+#include <core/application.h>
 
 using namespace Zeal::Browser;
 
-WebControl::WebControl(QWidget *parent)
+WebControl::WebControl(QWidget *parent, QWebEngineProfile *webProfile)
     : QWidget(parent)
 {
     auto layout = new QVBoxLayout(this);
@@ -46,7 +48,8 @@ WebControl::WebControl(QWidget *parent)
 
     m_channel = new QWebChannel(this);
 
-    m_webView = new WebView(this);
+    m_webView = new WebView(this, webProfile);
+
     setFocusProxy(m_webView);
     m_webView->page()->setWebChannel(m_channel);
 
@@ -182,4 +185,14 @@ void WebControl::keyPressEvent(QKeyEvent *event)
         event->ignore();
         break;
     }
+}
+
+QWebEngineProfile *WebControl::makeDefaultProfile(QObject *parent) {
+    auto *profile = new QWebEngineProfile(QLatin1Literal("zeal"), parent);
+
+    profile->setHttpCacheType(QWebEngineProfile::HttpCacheType::MemoryHttpCache);
+    profile->setHttpUserAgent(QStringLiteral(u"Zeal/") % Core::Application::version().toString() % QStringLiteral(u" (WebEngine)"));
+    profile->setPersistentCookiesPolicy(QWebEngineProfile::PersistentCookiesPolicy::NoPersistentCookies);
+
+    return profile;
 }
