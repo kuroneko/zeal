@@ -60,8 +60,6 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 
 private:
-    static bool isExternalUrl(const QUrl &url);
-
     QMenu *m_contextMenu = nullptr;
     QUrl m_clickedLink;
     int m_zoomLevel = 0;

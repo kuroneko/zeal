@@ -24,6 +24,7 @@
 #include "webview.h"
 
 #include "webcontrol.h"
+#include "webpage.h"
 
 #include <core/application.h>
 #include <core/settings.h>
@@ -46,7 +47,7 @@ using namespace Zeal::Browser;
 WebView::WebView(QWidget *parent, QWebEngineProfile *webProfile)
     : QWebEngineView(parent)
 {
-    auto ourPage = new QWebEnginePage(webProfile, this);
+    auto ourPage = new WebPage(webProfile, this);
     setPage(ourPage);
     //FIXME: no NAM for WebEngine - need to use a access/gating override in the page object instead!
     //page()->setNetworkAccessManager(Core::Application::instance()->networkManager());
@@ -299,15 +300,4 @@ void WebView::wheelEvent(QWheelEvent *event)
     }
 
     QWebEngineView::wheelEvent(event);
-}
-
-bool WebView::isExternalUrl(const QUrl &url)
-{
-    static const QStringList localSchemes = {
-        QStringLiteral("file"),
-        QStringLiteral("qrc"),
-    };
-
-    const QString scheme = url.scheme();
-    return !scheme.isEmpty() && !localSchemes.contains(scheme);
 }
