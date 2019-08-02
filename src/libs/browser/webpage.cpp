@@ -121,12 +121,6 @@ WebPage::acceptNavigationRequest(const QUrl &url, QWebEnginePage::NavigationType
     }
 }
 
-QWebEnginePage *
-Zeal::Browser::WebPage::createWindow(QWebEnginePage::WebWindowType type)
-{
-    return QWebEnginePage::createWindow(type);
-}
-
 bool
 WebPage::isExternalUrl(const QUrl &url)
 {
