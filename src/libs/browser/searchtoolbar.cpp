@@ -42,7 +42,7 @@ SearchToolBar::SearchToolBar(QWebEngineView *webView, QWidget *parent)
     layout->setContentsMargins(4, 4, 4, 4);
     layout->setSpacing(4);
 
-    m_lineEdit = new QLineEdit();
+    m_lineEdit = new QLineEdit(this);
     m_lineEdit->installEventFilter(this);
     m_lineEdit->setPlaceholderText(tr("Find in page"));
     m_lineEdit->setMaximumWidth(200);
@@ -50,7 +50,7 @@ SearchToolBar::SearchToolBar(QWebEngineView *webView, QWidget *parent)
     connect(m_lineEdit, &QLineEdit::textChanged, this, &SearchToolBar::updateHighlight);
     layout->addWidget(m_lineEdit);
 
-    m_findPreviousButton = new QToolButton();
+    m_findPreviousButton = new QToolButton(this);
     m_findPreviousButton->setAutoRaise(true);
     m_findPreviousButton->setIcon(qApp->style()->standardIcon(QStyle::SP_ArrowBack));
     m_findPreviousButton->setToolTip(tr("Previous result"));
@@ -63,7 +63,7 @@ SearchToolBar::SearchToolBar(QWebEngineView *webView, QWidget *parent)
     connect(action, &QAction::triggered, this, [this]() { m_findPreviousButton->animateClick(); });
     addAction(action);
 
-    m_findNextButton = new QToolButton();
+    m_findNextButton = new QToolButton(this);
     m_findNextButton->setAutoRaise(true);
     m_findNextButton->setIcon(qApp->style()->standardIcon(QStyle::SP_ArrowForward));
     m_findNextButton->setToolTip(tr("Next result"));
@@ -75,14 +75,7 @@ SearchToolBar::SearchToolBar(QWebEngineView *webView, QWidget *parent)
     connect(action, &QAction::triggered, this, [this]() { m_findNextButton->animateClick(); });
     addAction(action);
 
-    m_highlightAllButton = new QToolButton();
-    m_highlightAllButton->setAutoRaise(true);
-    m_highlightAllButton->setCheckable(true);
-    m_highlightAllButton->setText(tr("High&light All"));
-    connect(m_highlightAllButton, &QToolButton::toggled, this, &SearchToolBar::updateHighlight);
-    layout->addWidget(m_highlightAllButton);
-
-    m_matchCaseButton = new QToolButton();
+    m_matchCaseButton = new QToolButton(this);
     m_matchCaseButton->setAutoRaise(true);
     m_matchCaseButton->setCheckable(true);
     m_matchCaseButton->setText(tr("Mat&ch Case"));
@@ -91,7 +84,7 @@ SearchToolBar::SearchToolBar(QWebEngineView *webView, QWidget *parent)
 
     layout->addStretch();
 
-    auto closeButton = new QToolButton();
+    auto closeButton = new QToolButton(this);
     closeButton->setAutoRaise(true);
     closeButton->setIcon(qApp->style()->standardIcon(QStyle::SP_TitleBarCloseButton));
     closeButton->setToolTip(tr("Close find bar"));
@@ -199,9 +192,7 @@ void SearchToolBar::updateHighlight()
 {
     hideHighlight();
 
-    if (m_highlightAllButton->isChecked()) {
-        QWebEnginePage::FindFlags ff;
-        ff.setFlag(QWebEnginePage::FindCaseSensitively, m_matchCaseButton->isChecked());
-        m_webView->findText(m_lineEdit->text(), ff);
-    }
+    QWebEnginePage::FindFlags ff;
+    ff.setFlag(QWebEnginePage::FindCaseSensitively, m_matchCaseButton->isChecked());
+    m_webView->findText(m_lineEdit->text(), ff);
 }
