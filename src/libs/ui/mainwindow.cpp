@@ -52,8 +52,8 @@
 #include <QShortcut>
 #include <QSystemTrayIcon>
 #include <QTabBar>
-#include <QWebHistory>
-#include <QWebSettings>
+#include <QWebEngineHistory>
+#include <QWebEngineSettings>
 
 using namespace Zeal;
 using namespace Zeal::WidgetUi;
@@ -547,12 +547,11 @@ void MainWindow::applySettings()
             ba += file->readAll();
         }
     }
-
-    const QString cssUrl = QLatin1String("data:text/css;charset=utf-8;base64,") + ba.toBase64();
-    QWebSettings::globalSettings()->setUserStyleSheetUrl(QUrl(cssUrl));
-
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::ScrollAnimatorEnabled,
-                                                 m_settings->isSmoothScrollingEnabled);
+    // FIXME: user stylesheets don't work.
+    // const QString cssUrl = QLatin1String("data:text/css;charset=utf-8;base64,") + ba.toBase64();
+    // QWebEngineSettings::globalSettings()->setUserStyleSheetUrl(QUrl(cssUrl));
+    QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled,
+                                                       m_settings->isSmoothScrollingEnabled);
 }
 
 void MainWindow::toggleWindow()

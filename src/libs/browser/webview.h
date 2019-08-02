@@ -25,13 +25,13 @@
 #define ZEAL_BROWSER_WEBVIEW_H
 
 #include <QVector>
-#include <QWebFrame>
-#include <QWebView>
+#include <QWebEnginePage>
+#include <QWebEngineView>
 
 namespace Zeal {
 namespace Browser {
 
-class WebView final : public QWebView
+class WebView final : public QWebEngineView
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebView)
@@ -53,15 +53,13 @@ signals:
     void zoomLevelChanged();
 
 protected:
-    QWebView *createWindow(QWebPage::WebWindowType type) override;
+    QWebEngineView *createWindow(QWebEnginePage::WebWindowType type) override;
     void contextMenuEvent(QContextMenuEvent *event) override;
-    void mousePressEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *eventm) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
 private:
-    QWebHitTestResult hitTestContent(const QPoint &pos) const;
-
     static bool isExternalUrl(const QUrl &url);
 
     QMenu *m_contextMenu = nullptr;

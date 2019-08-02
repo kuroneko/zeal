@@ -29,10 +29,11 @@
 #include <QCoreApplication>
 #include <QKeyEvent>
 #include <QStyle>
-#include <QWebFrame>
-#include <QWebHistory>
-#include <QWebPage>
+#include <QWebEngineHistory>
+#include <QWebEnginePage>
+#include <QWebEngineSettings>
 #include <QVBoxLayout>
+#include <QWebChannel>
 
 using namespace Zeal::Browser;
 
@@ -43,17 +44,20 @@ WebControl::WebControl(QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    m_webView = new WebView();
-    setFocusProxy(m_webView);
+    m_channel = new QWebChannel(this);
 
-    connect(m_webView->page(), &QWebPage::linkHovered, this, [this](const QString &link) {
+    m_webView = new WebView(this);
+    setFocusProxy(m_webView);
+    m_webView->page()->setWebChannel(m_channel);
+
+    connect(m_webView->page(), &QWebEnginePage::linkHovered, this, [this](const QString &link) {
         if (link.startsWith(QLatin1String("file:")) || link.startsWith(QLatin1String("qrc:")))
             return;
 
         setToolTip(link);
     });
-    connect(m_webView, &QWebView::titleChanged, this, &WebControl::titleChanged);
-    connect(m_webView, &QWebView::urlChanged, this, &WebControl::urlChanged);
+    connect(m_webView, &QWebEngineView::titleChanged, this, &WebControl::titleChanged);
+    connect(m_webView, &QWebEngineView::urlChanged, this, &WebControl::urlChanged);
 
     layout->addWidget(m_webView);
 
@@ -88,15 +92,12 @@ void WebControl::resetZoom()
 
 void WebControl::setJavaScriptEnabled(bool enabled)
 {
-    m_webView->page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, enabled);
+    m_webView->page()->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, enabled);
 }
 
 void WebControl::setWebBridgeObject(const QString &name, QObject *object)
 {
-    connect(m_webView->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
-            this, [=]() {
-        m_webView->page()->mainFrame()->addToJavaScriptWindowObject(name, object);
-    });
+    m_channel->registerObject(name, object);
 }
 
 void WebControl::load(const QUrl &url)
@@ -152,7 +153,7 @@ QUrl WebControl::url() const
     return m_webView->url();
 }
 
-QWebHistory *WebControl::history() const
+QWebEngineHistory *WebControl::history() const
 {
     return m_webView->history();
 }
